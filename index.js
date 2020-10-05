@@ -4,7 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 const hostname = '127.0.0.1';
-const port = process.env.RDS_HOSTNAME;
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 var app = express();
 const path = require('path');
 
