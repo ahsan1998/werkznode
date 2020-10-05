@@ -1,8 +1,9 @@
 
 const config = {
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'werkz@123',
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_HOSTNAME,
+    password: process.env.RDS_HOSTNAME,
+    port: process.env.RDS_HOSTNAME, 
     database: 'werkz'
 }
 module.exports= config;
