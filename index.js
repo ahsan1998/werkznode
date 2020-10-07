@@ -16,11 +16,11 @@ app.use(cors());
 app.use(bodyParser.json({limit:'50mb'})); 
 app.use(bodyParser.urlencoded({extended:true, limit:'50mb'}));
 
-app.use('/user', userRoute);
-app.use('/jobticket', jobticketRoute);
-app.use('/category', categoryRoute);
+app.use('/api/user', userRoute);
+app.use('/api/jobticket', jobticketRoute);
+app.use('/api/category', categoryRoute);
 
-app.get('/', function (req, res) {
+app.get('/api', function (req, res) {
     res.send('Successful');
 });
 
