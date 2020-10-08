@@ -2,29 +2,70 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 const config = require('../config/database.js');
+const aws = require('aws-sdk');
+const multerS3 = require('multer-s3');
 const multer = require('multer');
+const path = require('path');
+const url = require('url');
 
-const s3 = require('../config/s3.config.js');
-var storage = multer.memoryStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'jobticket');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+const s3 = new aws.S3({
+    accessKeyId: 'AKIA4SZD36L2FJILRUMB',
+    secretAccessKey: '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',
+    Bucket: 'werkzbucket'
+});
+
+
+const profileImgUpload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'onclick',
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            cb(null, '/job');
+        },
+    }),
+    limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
     }
-})
-var upload = multer({ storage: storage });
+}).single('profileImage');
 
-var closestorage = multer.memoryStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'closejobticket');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+function checkFileType(file, cb) {
+    // Allowed ext
+    const filetypes = /jpeg|jpg|png|gif/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: Images Only!');
     }
-})
-var closeupload = multer({ storage: closestorage });
-
+}
+router.post('/addjobTicketImage', (req, res) => {
+    profileImgUpload(req, res, (error) => {
+        // console.log( 'requestOkokok', req.file );
+        // console.log( 'error', error );
+        if (error) {
+            console.log('errors', error);
+            res.json({ error: error });
+        } else {
+            // If File not found
+            if (req.file === undefined) {
+                console.log('Error: No File Selected!');
+                res.json('Error: No File Selected');
+            } else {
+                // If Success
+                const imageName = req.file;
+                // Save the file name into database into profile model
+                res.json({
+                    image: imageName
+                });
+            }
+        }
+    });
+});
 
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
 
@@ -57,11 +98,26 @@ router.post('/addjobTicketImage', upload.single("file"), (req, res) => {
 
     });
 });
+router.post('/addjobTicketImage', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        res.json({
+            status: false,
+            message: "Job Ticket Image Upload Unsuccessful",
+
+        });
+
+    }
+    else {
+        res.json({
+            status: true,
+            message: "Job Ticket Image Uploaded"
+        });
+    }
+});
 router.post('/closejobTicketImage', closeupload.single('image'), (req, res) => {
     const s3Client = s3.s3Client;
     const params = s3.uploadParams;
 
-    params.Body = req.file;
     s3Client.upload(params, (err, data) => {
         if (err) {
             res.json({
