@@ -18,7 +18,7 @@ const s3 = new aws.S3({
 const profileImgUpload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'onclick',
+        bucket: 'werkzbucket',
         acl: 'public-read',
         key: function (req, file, cb) {
             cb(null, '');
