@@ -11,7 +11,7 @@ const url = require('url');
 const s3 = new aws.S3({
     accessKeyId: 'AKIA4SZD36L2PPMNO4OJ',
     secretAccessKey: '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',
-    Bucket: 'werkzbucket'
+    bucket: 'werkzbucket'
 });
 
 
