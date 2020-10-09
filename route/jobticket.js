@@ -25,10 +25,15 @@ const params = {
 const uploadFile = (fileName) => {
 
     // Setting up S3 upload parameters
+    
+};
+
+router.post('/addjobTicketImage',(req, res) => {
+    console.log(req.file);
     const params = {
         Bucket: BUCKET_NAME,
         Key: 'cat.jpg', // File name you want to save as in S3
-        Body: fileName
+        Body: req.file
     };
 
     // Uploading files to the bucket
@@ -48,11 +53,6 @@ const uploadFile = (fileName) => {
         });
     }
     });
-};
-
-router.post('/addjobTicketImage',(req, res) => {
-    console.log(req.file);
-   uploadFile(req.file)
 });
 
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
