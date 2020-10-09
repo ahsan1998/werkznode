@@ -11,13 +11,14 @@ const url = require('url');
 const s3 = new aws.S3({
     accessKeyId: 'AKIA4SZD36L2PPMNO4OJ',
     secretAccessKey: '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',
-    bucket: 'werkzbucket'
+    Bucket: 'werkzbucket'
 });
 
 
 const profileImgUpload = multer({
     storage: multerS3({
         s3: s3,
+        bucket: 'werkzbucket',
         acl: 'public-read',
         key: function (req, file, cb) {
             cb(null, '');
