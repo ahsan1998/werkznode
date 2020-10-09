@@ -25,34 +25,45 @@ const params = {
 const uploadFile = (fileName) => {
 
     // Setting up S3 upload parameters
-    
+
 };
 
-router.post('/addjobTicketImage',(req, res) => {
-    console.log(req.file);
-    const params = {
-        Bucket: BUCKET_NAME,
-        Key: 'cat.jpg', // File name you want to save as in S3
-        Body: req.file
-    };
-
-    // Uploading files to the bucket
-    s3.upload(params, function(err, data) {
-        if (err) {
-            res.json({
-                status: true,
-                message: "Job Ticket Image Uploaded"
-            });
-            throw err;
-        }
-        else{
+router.post('/addjobTicketImage', (req, res) => {
+    console.log(req);
+    if (!req.file) {
         res.json({
             status: false,
             message: "Job Ticket Image Upload Unsuccessful",
 
         });
+
     }
-    });
+    else {
+
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: 'cat.jpg', // File name you want to save as in S3
+            Body: req.file
+        };
+
+        // Uploading files to the bucket
+        s3.upload(params, function (err, data) {
+            if (err) {
+                res.json({
+                    status: true,
+                    message: "Job Ticket Image Uploaded"
+                });
+                throw err;
+            }
+            else {
+                res.json({
+                    status: false,
+                    message: "Job Ticket Image Upload Unsuccessful",
+
+                });
+            }
+        });
+    }
 });
 
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
