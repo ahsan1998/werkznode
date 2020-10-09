@@ -44,6 +44,8 @@ function checkFileType(file, cb) {
     }
 }
 router.post('/addjobTicketImage', (req, res) => {
+    console.log(req);
+    console.log(res);
     profileImgUpload(req, res, (error) => {
         // console.log( 'requestOkokok', req.file );
         // console.log( 'error', error );
