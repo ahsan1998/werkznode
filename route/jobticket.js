@@ -28,7 +28,7 @@ const uploadFile = (fileName) => {
     const params = {
         Bucket: BUCKET_NAME,
         Key: 'cat.jpg', // File name you want to save as in S3
-        Body: file.originalname
+        Body: fileName
     };
 
     // Uploading files to the bucket
