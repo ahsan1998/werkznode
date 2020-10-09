@@ -77,26 +77,6 @@ router.get('/', function (request, response) {
     response.send('Job Tickets');
 });
 
-router.post('/closejobTicketImage', closeupload.single('image'), (req, res) => {
-    const s3Client = s3.s3Client;
-    const params = s3.uploadParams;
-
-    s3Client.upload(params, (err, data) => {
-        if (err) {
-            res.json({
-                status: false,
-                message: "Job Ticket Closing Image Upload Unsuccessful",
-
-            });
-        }
-        res.json({
-            status: true,
-            message: "Job Ticket Closing Image Uploaded"
-        });
-
-    });
-
-});
 
 router.post('/addJobticket', (req, res, next) => {
 
