@@ -9,8 +9,8 @@ const path = require('path');
 const url = require('url');
 
 const s3 = new aws.S3({
-    accessKeyId: 'AKIA4SZD36L2FJILRUMB',
-    secretAccessKey: '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',
+    accessKeyId: 'AKIA4SZD36L2PPMNO4OJ',
+    secretAccessKey: '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',
     Bucket: 'werkzbucket'
 });
 
@@ -52,12 +52,12 @@ router.post('/addjobTicketImage', (req, res) => {
             res.json({ error: error });
         } else {
             // If File not found
-            if (req.file === undefined) {
+            if (req.image === undefined) {
                 console.log('Error: No File Selected!');
                 res.json('Error: No File Selected');
             } else {
                 // If Success
-                const imageName = req.file;
+                const imageName = req.image;
                 // Save the file name into database into profile model
                 res.json({
                     image: imageName
