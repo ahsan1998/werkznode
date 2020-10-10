@@ -2,68 +2,40 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 const config = require('../config/database.js');
+
 const aws = require('aws-sdk');
-const multerS3 = require('multer-s3');
 const multer = require('multer');
-const path = require('path');
-const url = require('url');
+const multerS3 = require('multer-s3');
 
-const AWS = require('aws-sdk');
-const ID = 'AKIA4SZD36L2BMSOA22L';
-const SECRET = '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';
-const fs = require('fs');
-// The name of the bucket that you have created
-const BUCKET_NAME = 'jobticket';
-const s3 = new AWS.S3({
-    accessKeyId: ID,
-    secretAccessKey: SECRET
+aws.config.update({
+    secretAccessKey: 'j8sKGYz8O4oG4a/NSd1bFHrkALFSzkZnr82CZr8u',
+    accessKeyId: 'AKIA4SZD36L2BMSOA22L',
+    region: 'ASIA-SOUTHEAST1',
 });
-const params = {
-    Bucket: BUCKET_NAME,
-};
 
-const uploadFile = (fileName) => {
+const s3 = new aws.S3();
 
-    // Setting up S3 upload parameters
-
-};
-
-router.post('/addjobTicketImage', (req, res) => {
-    console.log(req);
-    if (!req) {
-        res.json({
-            status: false,
-            message: "Job Ticket Image Upload Unsuccessful123",
-
-        });
-
-    }
-    else {
-
-        const params = {
-            Bucket: BUCKET_NAME,
-            Key: 'cat.jpg', // File name you want to save as in S3
-            Body: req.file
-        };
-
-        // Uploading files to the bucket
-        s3.upload(params, function (err, data) {
-            if (err) {
-                res.json({
-                    status: true,
-                    message: "Job Ticket Image Uploaded"
-                });
-                throw err;
-            }
-            else {
-                res.json({
-                    status: false,
-                    message: "Job Ticket Image Upload Unsuccessful",
-
-                });
-            }
-        });
-    }
+const upload = multer({
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'application/octet-stream' || file.mimetype === 'video/mp4'
+            || file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type'), false);
+        }
+    },
+    storage: multerS3({
+        acl: 'public-read',
+        s3,
+        bucket: 'jobticket',
+        key: function (req, file, cb) {
+            req.file = Date.now() + file.originalname;
+            cb(null, Date.now() + file.originalname);
+        }
+    })
+});
+router.post('/addjobTicketImage',upload.array('file', 1), (req, res) => {
+    res.send({ file: req.file });
 });
 
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
