@@ -34,7 +34,7 @@ const upload = multer({
         }
     })
 });
-router.post('/addjobTicketImage',upload.array('image', 1), (req, res) => {
+router.post('/addjobTicketImage',upload.array('file', 1), (req, res) => {
     res.send({ file: req.image});
 });
 
