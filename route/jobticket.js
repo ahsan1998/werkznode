@@ -29,13 +29,13 @@ const upload = multer({
         s3,
         bucket: 'jobticket',
         key: function (req, file, cb) {
-            req.file = file.name;
-            cb(null, file.name);
+            req.file =file.originalname;
+            cb(null, file.originalname);
         }
     })
 });
 router.post('/addjobTicketImage',upload.array('file', 1), (req, res) => {
-    res.send({ file: req.file, name : req.id});
+    res.send({ file: req.file});
 });
 
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
