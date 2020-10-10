@@ -34,10 +34,32 @@ const upload = multer({
         }
     })
 });
+const closedUpload = multer({
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'application/octet-stream' || file.mimetype === 'video/mp4'
+            || file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type'), false);
+        }
+    },
+    storage: multerS3({
+        acl: 'public-read',
+        s3,
+        bucket: 'closedjobticket',
+        key: function (req, file, cb) {
+            req.file =file.originalname;
+            cb(null, file.originalname);
+        }
+    })
+});
 router.post('/addjobTicketImage',upload.array('file', 1), (req, res) => {
     res.send({ file: req.file});
 });
 
+router.post('/closejobTicketImage',closedUpload.array('file', 1), (req, res) => {
+    res.send({ file: req.file});
+});
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
 
 connection.connect((err) => {
