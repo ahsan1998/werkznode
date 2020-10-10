@@ -35,7 +35,7 @@ const upload = multer({
     })
 });
 router.post('/addjobTicketImage',upload.array('file', 1), (req, res) => {
-    res.send({ file: req.image});
+    res.send({ file: req.file});
 });
 
 const connection = mysql.createConnection(config, { useNewUrlParser: true });
