@@ -33,7 +33,7 @@ router.post('/addjobTicketImage', (req, res) => {
     if (!req.body.file) {
         res.json({
             status: false,
-            message: "Job Ticket Image Upload Unsuccessful",
+            message: "Job Ticket Image Upload Unsuccessful123",
 
         });
 
