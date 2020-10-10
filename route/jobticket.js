@@ -30,7 +30,7 @@ const uploadFile = (fileName) => {
 
 router.post('/addjobTicketImage', (req, res) => {
     console.log(req);
-    if (!req.body.file) {
+    if (!req) {
         res.json({
             status: false,
             message: "Job Ticket Image Upload Unsuccessful123",
