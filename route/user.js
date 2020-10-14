@@ -175,4 +175,26 @@ router.get('/getUserById/:id', (req, res, next) => {
         }
 	});
 });
+
+router.delete('/removeUser/:id', (req, res, next) => {
+	var id = req.params.id;
+    connection.query("DELETE FROM users WHERE id = ?", [id],
+    (error, result, fields) =>{
+		if (error) {
+            console.log(error)
+            res.json({
+                status: false,
+                message: "User Cannot be Removed",
+
+            });
+        }
+        else {
+            res.json({
+                status: true,
+                message: "User Removed Successfully"
+            });
+        }
+	});
+
+});
 module.exports = router;
