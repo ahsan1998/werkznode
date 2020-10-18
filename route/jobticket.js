@@ -11,6 +11,7 @@ aws.config.update({
     secretAccessKey: 'j8sKGYz8O4oG4a/NSd1bFHrkALFSzkZnr82CZr8u',
     accessKeyId: 'AKIA4SZD36L2BMSOA22L',
     region: 'ap-southeast-1',
+    sslEnabled: false,
 });
 
 const s3 = new aws.S3();
